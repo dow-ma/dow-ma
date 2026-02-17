@@ -10,6 +10,7 @@ import { Dictionary } from "@/lib/types";
 interface ArticleListProps {
     posts: Post[];
     dict: Dictionary;
+    lang: "en" | "zh";
 }
 
 const ITEMS_PER_PAGE = 10;
@@ -21,8 +22,9 @@ const ITEMS_PER_PAGE = 10;
  * 
  * @param posts - Array of Post objects.
  * @param dict - Localized dictionary data.
+ * @param lang - Current language.
  */
-export function ArticleList({ posts, dict }: ArticleListProps) {
+export function ArticleList({ posts, dict, lang }: ArticleListProps) {
     const [currentPage, setCurrentPage] = useState(1);
 
     const totalPages = Math.ceil(posts.length / ITEMS_PER_PAGE);
@@ -56,7 +58,7 @@ export function ArticleList({ posts, dict }: ArticleListProps) {
 
             <div className="grid gap-4">
                 {currentPosts.map((post, index) => (
-                    <ArticleCard key={post.slug} post={post} index={index} dict={dict} />
+                    <ArticleCard key={post.slug} post={post} index={index} dict={dict} lang={lang} />
                 ))}
             </div>
 
@@ -89,7 +91,7 @@ export function ArticleList({ posts, dict }: ArticleListProps) {
  * 
  * Renders a single blog post card with glassmorphism style.
  */
-function ArticleCard({ post, index, dict }: { post: Post; index: number; dict: Dictionary }) {
+function ArticleCard({ post, index, dict, lang }: { post: Post; index: number; dict: Dictionary; lang: "en" | "zh" }) {
     const formattedDate = new Date(post.date).toLocaleDateString(dict.articles.date.includes('年') ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
     return (
@@ -98,7 +100,7 @@ function ArticleCard({ post, index, dict }: { post: Post; index: number; dict: D
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 + index * 0.1 }}
         >
-            <Link href={`/posts/${post.slug}`} className="block">
+            <Link href={`/${lang}/posts/${post.slug}`} className="block">
                 <div className="glass-hover glass rounded-2xl p-6 relative group cursor-pointer border border-white/5 hover:border-white/20">
                     <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform group-hover:translate-x-1 group-hover:-translate-y-1">
                         <ArrowUpRight className="w-5 h-5 text-white" />

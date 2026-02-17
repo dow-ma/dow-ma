@@ -35,7 +35,7 @@ export function getSortedPostsData() {
 
         return {
             slug,
-            ...(matterResult.data as { title: string; date: string; description: string }),
+            ...(matterResult.data as { title: string; date: string; description: string; lang?: string; tags?: string[] }),
         };
     });
 
