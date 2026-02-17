@@ -33,10 +33,28 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
             const titleRes = await translate(post.title, { to: targetLang });
             post.title = titleRes.text;
 
-            // Translate content (simple approach: translate full text, might break code blocks temporarily but acceptable for 'prank' plugin)
-            // A better approach would be to split by code blocks, but for this task we use direct translation
-            const contentRes = await translate(post.content || '', { to: targetLang });
-            post.content = contentRes.text;
+            // Translate content excluding code blocks
+            const content = post.content || '';
+            const codeBlockRegex = /(```[\s\S]*?```)/g;
+            const parts = content.split(codeBlockRegex);
+
+            const translatedParts = await Promise.all(parts.map(async (part) => {
+                // If part is a code block (starts with ```), return as is
+                if (part.trim().startsWith('```')) {
+                    return part;
+                }
+                // Otherwise translate text (skip empty/whitespace only strings)
+                if (!part.trim()) return part;
+
+                try {
+                    const res = await translate(part, { to: targetLang });
+                    return res.text;
+                } catch (e) {
+                    return part;
+                }
+            }));
+
+            post.content = translatedParts.join('');
 
             isTranslated = true;
         } catch (e) {
