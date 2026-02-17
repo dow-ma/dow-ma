@@ -21,7 +21,9 @@ export function getSortedPostsData() {
         return [];
     }
 
-    const fileNames = fs.readdirSync(postsDirectory);
+    const fileNames = fs.readdirSync(postsDirectory).filter(fileName => {
+        return fileName.endsWith('.md') || fileName.endsWith('.mdx');
+    });
     const allPostsData = fileNames.map((fileName) => {
         // Remove ".mdx" or ".md" from file name to get slug
         const slug = fileName.replace(/\.mdx?$/, '');

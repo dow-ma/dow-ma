@@ -7,6 +7,19 @@ import rehypePrettyCode from "rehype-pretty-code";
 // @ts-ignore
 import translate from "@iamtraction/google-translate";
 import { TranslationBanner } from "@/components/TranslationBanner";
+import fs from "fs/promises";
+import path from "path";
+
+// Simple Markdown Fixer to repair common translation artifacts
+function repairMarkdown(text: string): string {
+    return text
+        // Fix headers: "#Title" -> "# Title"
+        .replace(/^(#+)([^#\s])/gm, '$1 $2')
+        // Fix lists: "-Item" -> "- Item"
+        .replace(/^(\s*[-*])([^\s])/gm, '$1 $2')
+        // Fix blockquotes: ">Text" -> "> Text"
+        .replace(/^(\s*>)([^\s])/gm, '$1 $2');
+}
 
 export async function generateStaticParams() {
     const posts = getSortedPostsData();
@@ -27,80 +40,104 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
 
     // Auto-translation logic
     if (post.lang && post.lang !== lang) {
+        const cacheDir = path.join(process.cwd(), 'posts', 'cache');
+        const cacheFile = path.join(cacheDir, `${slug}-${lang}.json`);
+
         try {
-            const targetLang = lang === 'zh' ? 'zh-CN' : lang;
+            // Check cache first
+            try {
+                const cacheData = await fs.readFile(cacheFile, 'utf8');
+                const cached = JSON.parse(cacheData);
+                post.title = cached.title;
+                post.content = cached.content;
+                isTranslated = true;
 
-            // Translate title
-            const titleRes = await translate(post.title, { to: targetLang });
-            post.title = titleRes.text;
+                // Compile cached content
+                const { content: compiledContent } = await compileMDX({
+                    source: cached.content,
+                    options: {
+                        parseFrontmatter: true,
+                        mdxOptions: {
+                            rehypePlugins: [
+                                [rehypePrettyCode, {
+                                    theme: 'catppuccin-macchiato',
+                                    keepBackground: true,
+                                }]
+                            ]
+                        }
+                    }
+                });
+                mdxContent = compiledContent;
+            } catch (cacheError) {
+                // Cache miss or invalid, proceed to translate
+                const targetLang = lang === 'zh' ? 'zh-CN' : lang;
 
-            // Translate content excluding code blocks
-            const originalPostContent = post.content || '';
-            const codeBlockRegex = /(```[\s\S]*?```)/g;
-            const parts = originalPostContent.split(codeBlockRegex);
+                // Translate title
+                const titleRes = await translate(post.title, { to: targetLang });
+                const translatedTitle = titleRes.text;
 
-            const translatedParts = await Promise.all(parts.map(async (part) => {
-                // If part is a code block (starts with ```), return as is
-                if (part.trim().startsWith('```')) {
-                    return part;
-                }
-                // Otherwise translate text (skip empty/whitespace only strings)
-                if (!part.trim()) return part;
+                // Translate content excluding code blocks
+                const originalPostContent = post.content || '';
+                const codeBlockRegex = /(```[\s\S]*?```)/g;
+                const parts = originalPostContent.split(codeBlockRegex);
+
+                const translatedParts = await Promise.all(parts.map(async (part) => {
+                    // If part is a code block (starts with ```), return as is
+                    if (part.trim().startsWith('```')) {
+                        return part;
+                    }
+                    // Otherwise translate text (skip empty/whitespace only strings)
+                    if (!part.trim()) return part;
+
+                    try {
+                        const res = await translate(part, { to: targetLang });
+                        return repairMarkdown(res.text);
+                    } catch (e) {
+                        return part;
+                    }
+                }));
+
+                const translatedContent = translatedParts.join('');
 
                 try {
-                    const res = await translate(part, { to: targetLang });
-                    return res.text;
-                } catch (e) {
-                    return part;
+                    // Try to compile translated content to check for validity
+                    const { content: compiledContent } = await compileMDX({
+                        source: translatedContent,
+                        options: {
+                            parseFrontmatter: true,
+                            mdxOptions: {
+                                rehypePlugins: [
+                                    [rehypePrettyCode, {
+                                        theme: 'catppuccin-macchiato',
+                                        keepBackground: true,
+                                    }]
+                                ]
+                            }
+                        }
+                    });
+
+                    // Update post object with translated content
+                    post.title = translatedTitle;
+                    post.content = translatedContent;
+                    mdxContent = compiledContent; // Store valid translated MDX
+                    isTranslated = true;
+
+                    // Save to cache
+                    await fs.mkdir(cacheDir, { recursive: true });
+                    await fs.writeFile(cacheFile, JSON.stringify({
+                        title: translatedTitle,
+                        content: translatedContent
+                    }));
+
+                } catch (compileError) {
+                    console.error("Translated MDX compilation failed, falling back to original:", compileError);
+                    throw compileError; // Re-throw to trigger outer catch block fallback
                 }
-            }));
-
-            const translatedContent = translatedParts.join('');
-
-            try {
-                // Try to compile translated content to check for validity
-                const { content: compiledContent } = await compileMDX({
-                    source: translatedContent,
-                    options: {
-                        parseFrontmatter: true,
-                        mdxOptions: {
-                            rehypePlugins: [
-                                [rehypePrettyCode, {
-                                    theme: 'catppuccin-macchiato',
-                                    keepBackground: true,
-                                }]
-                            ]
-                        }
-                    }
-                });
-
-                post.content = translatedContent;
-                mdxContent = compiledContent; // Store valid translated MDX
-                isTranslated = true;
-            } catch (compileError) {
-                console.error("Translated MDX compilation failed, falling back to original:", compileError);
-                // Fallback to original content compilation
-                const { content: originalCompiled } = await compileMDX({
-                    source: originalPostContent,
-                    options: {
-                        parseFrontmatter: true,
-                        mdxOptions: {
-                            rehypePlugins: [
-                                [rehypePrettyCode, {
-                                    theme: 'catppuccin-macchiato',
-                                    keepBackground: true,
-                                }]
-                            ]
-                        }
-                    }
-                });
-                mdxContent = originalCompiled;
-                isTranslated = false;
             }
 
         } catch (e) {
-            console.error("Translation logic failed:", e);
-            // Fallback for logic error
+            console.error("Translation logic/compilation failed:", e);
+            // Fallback to original content compilation
             const { content: originalCompiled } = await compileMDX({
                 source: post.content || '',
                 options: {
