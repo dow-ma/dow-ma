@@ -23,8 +23,11 @@ I'm a seasoned developer with over **20 years** of experience in the software in
 
 ### 📊 GitHub Stats
 
-![Your GitHub Stats](https://github-readme-stats.vercel.app/api?username=dow-ma&show_icons=true&theme=radical)
-![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=dow-ma&layout=compact&theme=radical)
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=dow-ma&show_icons=true&theme=radical" alt="Stats" />
+  <br/>
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=dow-ma&layout=compact&theme=radical" alt="Languages" />
+</p>
 
 ---
 
