@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hi there, I'm Dow 👋
 
-## Getting Started
+### 🚀 Building useful AI applications | Full-stack
 
-First, run the development server:
+![AI](https://img.shields.io/badge/AI-LLM_/_RAG_/_Agents-black?style=flat-square&logo=openai)
+![Vibe Coding](https://img.shields.io/badge/Vibe_Coding-Intention_Driven-8A2BE2?style=flat-square&logo=visual-studio-code&logoColor=white)
+![Java](https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white)
+![Android](https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=white)
+![Swift](https://img.shields.io/badge/Swift-F05138?style=flat-square&logo=swift&logoColor=white)
+![Go](https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)
+![Quant](https://img.shields.io/badge/Quant-Trading_Systems-gold?style=flat-square)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🛠 What I bring to the table
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* **Experience:** 20+ years of turning caffeine into scalable code.
+* **Versatility:** From front-end pixels to low-latency trading backends.
+* **Mindset:** *Always learning, always shipping.* I believe software is only "done" when it's in the hands of users.
 
-## Learn More
+### 🧠 My Tech Stack & Interests
 
-To learn more about Next.js, take a look at the following resources:
+* **AI/ML:** LLM orchestration, RAG systems, and AI agent frameworks.
+* **Backend:** Python (FastAPI/Django), Go, Node.js.
+* **FinTech:** Quantitative strategy development and automated trading systems.
+* **Frontend:** React, TypeScript, and modern web ecosystems.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 📊 GitHub Stats
 
-## Deploy on Vercel
+<p align="center">
+  <img src="https://github-readme-streak-stats.herokuapp.com/?user=dow-ma&theme=radical" alt="Streak Stats" />
+</p>
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+<p align="center">
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=dow-ma&theme=radical" alt="Summary Card" />
+</p>
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+### 📫 Connect with me
+
+* **I’m looking to collaborate on:** Innovative AI applications and Open Source tools.
+* **Ask me about:** Full-stack architecture, Quant trading, or why "shipping is a feature."
+
+*"The best way to predict the future is to ship it."*
