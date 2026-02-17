@@ -17,7 +17,9 @@
     "articles": {
         "title": "Latest Articles",
         "date": "{month} {day}, {year}",
-        "tag": "X / Twitter"
+        "tag": "X / Twitter",
+        "viewOriginal": "Read Original",
+        "viewTranslated": "Read AI Translation"
     },
     "footer": "© {year} Dow Ma. All rights reserved."
 }

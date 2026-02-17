@@ -27,6 +27,8 @@ export interface Dictionary {
         title: string;
         date: string;
         tag: string;
+        viewOriginal: string;
+        viewTranslated: string;
     };
     footer: string;
 }

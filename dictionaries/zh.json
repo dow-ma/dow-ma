@@ -17,7 +17,9 @@
     "articles": {
         "title": "最新文章",
         "date": "{year}年{month}月{day}日",
-        "tag": "X / Twitter"
+        "tag": "X / Twitter",
+        "viewOriginal": "阅读原文",
+        "viewTranslated": "阅读 AI 翻译"
     },
     "footer": "© {year} Dow Ma. All rights reserved."
 }

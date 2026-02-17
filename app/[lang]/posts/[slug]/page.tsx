@@ -9,6 +9,7 @@ import translate from "@iamtraction/google-translate";
 import { TranslationBanner } from "@/components/TranslationBanner";
 import fs from "fs/promises";
 import path from "path";
+import { getDictionary } from "@/lib/get-dictionary";
 
 // Simple Markdown Fixer to repair common translation artifacts
 function repairMarkdown(text: string): string {
@@ -32,14 +33,28 @@ export async function generateStaticParams() {
     return params;
 }
 
-export default async function Post({ params }: { params: Promise<{ slug: string; lang: "en" | "zh" }> }) {
+export default async function Post({
+    params,
+    searchParams
+}: {
+    params: Promise<{ slug: string; lang: "en" | "zh" }>;
+    searchParams: Promise<{ view?: string }>;
+}) {
     const { slug, lang } = await params;
+    const { view } = await searchParams;
+    const dict = await getDictionary(lang);
     let post = await getPostData(slug);
+
+    // Original content reference for fallback or toggle
+    const originalPostTitle = post.title;
+    const originalPostContent = post.content || '';
+
     let isTranslated = false;
     let mdxContent;
+    const isViewingOriginal = view === 'original';
 
     // Auto-translation logic
-    if (post.lang && post.lang !== lang) {
+    if (post.lang && post.lang !== lang && !isViewingOriginal) {
         const cacheDir = path.join(process.cwd(), 'posts', 'cache');
         const cacheFile = path.join(cacheDir, `${slug}-${lang}.json`);
 
@@ -77,16 +92,13 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
                 const translatedTitle = titleRes.text;
 
                 // Translate content excluding code blocks
-                const originalPostContent = post.content || '';
                 const codeBlockRegex = /(```[\s\S]*?```)/g;
                 const parts = originalPostContent.split(codeBlockRegex);
 
                 const translatedParts = await Promise.all(parts.map(async (part) => {
-                    // If part is a code block (starts with ```), return as is
                     if (part.trim().startsWith('```')) {
                         return part;
                     }
-                    // Otherwise translate text (skip empty/whitespace only strings)
                     if (!part.trim()) return part;
 
                     try {
@@ -97,13 +109,10 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
                     }
                 }));
 
-                // Join with newlines to ensure code blocks don't stick to text
-                // Join with double newlines to ensure MDX blocks are strictly separated.
-                // This prevents code blocks from "bleeding" into subsequent text.
+                // Join with double newlines
                 const translatedContent = translatedParts.join('\n\n');
 
                 try {
-                    // Try to compile translated content to check for validity
                     const { content: compiledContent } = await compileMDX({
                         source: translatedContent,
                         options: {
@@ -119,13 +128,11 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
                         }
                     });
 
-                    // Update post object with translated content
                     post.title = translatedTitle;
                     post.content = translatedContent;
-                    mdxContent = compiledContent; // Store valid translated MDX
+                    mdxContent = compiledContent;
                     isTranslated = true;
 
-                    // Save to cache
                     await fs.mkdir(cacheDir, { recursive: true });
                     await fs.writeFile(cacheFile, JSON.stringify({
                         title: translatedTitle,
@@ -134,15 +141,14 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
 
                 } catch (compileError) {
                     console.error("Translated MDX compilation failed, falling back to original:", compileError);
-                    throw compileError; // Re-throw to trigger outer catch block fallback
+                    throw compileError;
                 }
             }
 
         } catch (e) {
             console.error("Translation logic/compilation failed:", e);
-            // Fallback to original content compilation
             const { content: originalCompiled } = await compileMDX({
-                source: post.content || '',
+                source: originalPostContent,
                 options: {
                     parseFrontmatter: true,
                     mdxOptions: {
@@ -159,9 +165,9 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
             isTranslated = false;
         }
     } else {
-        // No translation needed
+        // No translation needed or explicit original view
         const { content: originalCompiled } = await compileMDX({
-            source: post.content || '',
+            source: originalPostContent,
             options: {
                 parseFrontmatter: true,
                 mdxOptions: {
@@ -175,7 +181,14 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
             }
         });
         mdxContent = originalCompiled;
+
+        // Even in original view, we show the banner if translation is available/possible
+        if (post.lang && post.lang !== lang) {
+            isTranslated = true;
+        }
     }
+
+    const toggleUrl = isViewingOriginal ? `/${lang}/posts/${slug}` : `/${lang}/posts/${slug}?view=original`;
 
     return (
         <main className="min-h-screen bg-[#0a0a0a] text-white p-4 md:p-8 lg:p-24 flex justify-center">
@@ -188,11 +201,21 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
                     {lang === 'zh' ? '返回首页' : 'Back to Home'}
                 </Link>
 
-                {isTranslated && <TranslationBanner lang={lang} />}
+                {isTranslated && (
+                    <TranslationBanner
+                        lang={lang}
+                        isViewingOriginal={isViewingOriginal}
+                        toggleUrl={toggleUrl}
+                        labels={{
+                            viewOriginal: dict.articles.viewOriginal,
+                            viewTranslated: dict.articles.viewTranslated
+                        }}
+                    />
+                )}
 
                 <article className="prose prose-invert prose-lg max-w-none">
                     <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 mb-6 !leading-tight" style={{ WebkitTextFillColor: 'transparent' }}>
-                        {post.title}
+                        {isViewingOriginal ? originalPostTitle : post.title}
                     </h1>
                     <div className="flex items-center gap-4 text-sm text-white/40 mb-12">
                         <time>{post.date}</time>
