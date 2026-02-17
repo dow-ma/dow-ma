@@ -1,6 +1,6 @@
 # Hi there, I'm Dow 👋
 
-### 🚀 Building useful AI applications | Full-stack & Quant Veteran
+### 🚀 Building useful AI applications | Full-stack
 
 ![AI](https://img.shields.io/badge/AI-LLM_/_RAG_/_Agents-black?style=flat-square&logo=openai)
 ![Vibe Coding](https://img.shields.io/badge/Vibe_Coding-Intention_Driven-8A2BE2?style=flat-square&logo=visual-studio-code&logoColor=white)
