@@ -191,7 +191,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
                 {isTranslated && <TranslationBanner lang={lang} />}
 
                 <article className="prose prose-invert prose-lg max-w-none">
-                    <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 mb-4">
+                    <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 mb-6 !leading-tight" style={{ WebkitTextFillColor: 'transparent' }}>
                         {post.title}
                     </h1>
                     <div className="flex items-center gap-4 text-sm text-white/40 mb-12">
