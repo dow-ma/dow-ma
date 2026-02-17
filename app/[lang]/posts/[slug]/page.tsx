@@ -97,7 +97,8 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
                     }
                 }));
 
-                const translatedContent = translatedParts.join('');
+                // Join with newlines to ensure code blocks don't stick to text
+                const translatedContent = translatedParts.join('\n\n');
 
                 try {
                     // Try to compile translated content to check for validity
@@ -185,9 +186,9 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
                     {lang === 'zh' ? '返回首页' : 'Back to Home'}
                 </Link>
 
-                <article className="prose prose-invert prose-lg max-w-none">
-                    {isTranslated && <TranslationBanner lang={lang} />}
+                {isTranslated && <TranslationBanner lang={lang} />}
 
+                <article className="prose prose-invert prose-lg max-w-none">
                     <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 mb-4">
                         {post.title}
                     </h1>
@@ -202,5 +203,4 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
             </div>
         </main>
     );
-
 }
