@@ -1,7 +1,7 @@
 import { getPostData, getSortedPostsData } from "@/lib/posts";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { MDXRemote } from "next-mdx-remote/rsc";
+import { compileMDX } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
 
 // @ts-ignore
@@ -23,6 +23,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
     const { slug, lang } = await params;
     let post = await getPostData(slug);
     let isTranslated = false;
+    let mdxContent;
 
     // Auto-translation logic
     if (post.lang && post.lang !== lang) {
@@ -34,9 +35,9 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
             post.title = titleRes.text;
 
             // Translate content excluding code blocks
-            const content = post.content || '';
+            const originalPostContent = post.content || '';
             const codeBlockRegex = /(```[\s\S]*?```)/g;
-            const parts = content.split(codeBlockRegex);
+            const parts = originalPostContent.split(codeBlockRegex);
 
             const translatedParts = await Promise.all(parts.map(async (part) => {
                 // If part is a code block (starts with ```), return as is
@@ -54,12 +55,86 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
                 }
             }));
 
-            post.content = translatedParts.join('');
+            const translatedContent = translatedParts.join('');
 
-            isTranslated = true;
+            try {
+                // Try to compile translated content to check for validity
+                const { content: compiledContent } = await compileMDX({
+                    source: translatedContent,
+                    options: {
+                        parseFrontmatter: true,
+                        mdxOptions: {
+                            rehypePlugins: [
+                                [rehypePrettyCode, {
+                                    theme: 'catppuccin-macchiato',
+                                    keepBackground: true,
+                                }]
+                            ]
+                        }
+                    }
+                });
+
+                post.content = translatedContent;
+                mdxContent = compiledContent; // Store valid translated MDX
+                isTranslated = true;
+            } catch (compileError) {
+                console.error("Translated MDX compilation failed, falling back to original:", compileError);
+                // Fallback to original content compilation
+                const { content: originalCompiled } = await compileMDX({
+                    source: originalPostContent,
+                    options: {
+                        parseFrontmatter: true,
+                        mdxOptions: {
+                            rehypePlugins: [
+                                [rehypePrettyCode, {
+                                    theme: 'catppuccin-macchiato',
+                                    keepBackground: true,
+                                }]
+                            ]
+                        }
+                    }
+                });
+                mdxContent = originalCompiled;
+                isTranslated = false;
+            }
+
         } catch (e) {
-            console.error("Translation failed:", e);
+            console.error("Translation logic failed:", e);
+            // Fallback for logic error
+            const { content: originalCompiled } = await compileMDX({
+                source: post.content || '',
+                options: {
+                    parseFrontmatter: true,
+                    mdxOptions: {
+                        rehypePlugins: [
+                            [rehypePrettyCode, {
+                                theme: 'catppuccin-macchiato',
+                                keepBackground: true,
+                            }]
+                        ]
+                    }
+                }
+            });
+            mdxContent = originalCompiled;
+            isTranslated = false;
         }
+    } else {
+        // No translation needed
+        const { content: originalCompiled } = await compileMDX({
+            source: post.content || '',
+            options: {
+                parseFrontmatter: true,
+                mdxOptions: {
+                    rehypePlugins: [
+                        [rehypePrettyCode, {
+                            theme: 'catppuccin-macchiato',
+                            keepBackground: true,
+                        }]
+                    ]
+                }
+            }
+        });
+        mdxContent = originalCompiled;
     }
 
     return (
@@ -84,23 +159,11 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
                     </div>
 
                     <div className="mdx-content">
-                        <MDXRemote
-                            source={post.content || ''}
-                            options={{
-                                parseFrontmatter: true,
-                                mdxOptions: {
-                                    rehypePlugins: [
-                                        [rehypePrettyCode, {
-                                            theme: 'catppuccin-macchiato',
-                                            keepBackground: true,
-                                        }]
-                                    ]
-                                }
-                            }}
-                        />
+                        {mdxContent}
                     </div>
                 </article>
             </div>
         </main>
     );
+
 }
