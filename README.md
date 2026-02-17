@@ -13,7 +13,6 @@
 ![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)
 ![Quant](https://img.shields.io/badge/Quant-Trading_Systems-gold?style=flat-square)
 
-I'm a seasoned developer with over **20 years** of experience in the software industry. My journey has taken me from building complex full-stack architectures to the high-stakes world of quantitative trading. Currently, I'm obsessed with bridging the gap between cutting-edge AI and practical, user-centric applications.
 
 ---
 
