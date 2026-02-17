@@ -98,6 +98,8 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
                 }));
 
                 // Join with newlines to ensure code blocks don't stick to text
+                // Join with double newlines to ensure MDX blocks are strictly separated.
+                // This prevents code blocks from "bleeding" into subsequent text.
                 const translatedContent = translatedParts.join('\n\n');
 
                 try {
