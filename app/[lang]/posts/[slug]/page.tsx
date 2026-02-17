@@ -179,7 +179,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
             <div className="max-w-3xl w-full">
                 <Link
                     href={`/${lang}`}
-                    className="inline-flex items-center gap-2 text-white/50 hover:text-white mb-8 transition-colors"
+                    className="inline-flex items-center gap-2 text-white/50 hover:text-white mb-4 transition-colors"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     {lang === 'zh' ? '返回首页' : 'Back to Home'}
