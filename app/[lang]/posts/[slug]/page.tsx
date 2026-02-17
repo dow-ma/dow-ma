@@ -133,11 +133,16 @@ export default async function Post({
                     mdxContent = compiledContent;
                     isTranslated = true;
 
-                    await fs.mkdir(cacheDir, { recursive: true });
-                    await fs.writeFile(cacheFile, JSON.stringify({
-                        title: translatedTitle,
-                        content: translatedContent
-                    }));
+                    // WRAP CACHE WRITE IN TRY-CATCH to prevent failure on read-only environments
+                    try {
+                        await fs.mkdir(cacheDir, { recursive: true });
+                        await fs.writeFile(cacheFile, JSON.stringify({
+                            title: translatedTitle,
+                            content: translatedContent
+                        }));
+                    } catch (fsWriteError) {
+                        console.warn("Could not write translation cache (likely a read-only production environment):", fsWriteError);
+                    }
 
                 } catch (compileError) {
                     console.error("Translated MDX compilation failed, falling back to original:", compileError);
