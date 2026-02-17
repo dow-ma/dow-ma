@@ -2,6 +2,17 @@
 
 ### 🚀 Building useful AI applications | Full-stack & Quant Veteran
 
+![AI](https://img.shields.io/badge/AI-LLM_/_RAG_/_Agents-black?style=flat-square&logo=openai)
+![Vibe Coding](https://img.shields.io/badge/Vibe_Coding-Intention_Driven-8A2BE2?style=flat-square&logo=visual-studio-code&logoColor=white)
+![Java](https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white)
+![Android](https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=white)
+![Swift](https://img.shields.io/badge/Swift-F05138?style=flat-square&logo=swift&logoColor=white)
+![Go](https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)
+![Quant](https://img.shields.io/badge/Quant-Trading_Systems-gold?style=flat-square)
+
 I'm a seasoned developer with over **20 years** of experience in the software industry. My journey has taken me from building complex full-stack architectures to the high-stakes world of quantitative trading. Currently, I'm obsessed with bridging the gap between cutting-edge AI and practical, user-centric applications.
 
 ---
@@ -24,9 +35,11 @@ I'm a seasoned developer with over **20 years** of experience in the software in
 ### 📊 GitHub Stats
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=dow-ma&show_icons=true&theme=radical" alt="Stats" />
-  <br/>
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=dow-ma&layout=compact&theme=radical" alt="Languages" />
+  <img src="https://github-readme-streak-stats.herokuapp.com/?user=dow-ma&theme=radical" alt="Streak Stats" />
+</p>
+
+<p align="center">
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=dow-ma&theme=radical" alt="Summary Card" />
 </p>
 
 ---
