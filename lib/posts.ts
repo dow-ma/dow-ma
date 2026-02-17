@@ -64,6 +64,6 @@ export async function getPostData(slug: string) {
     return {
         slug,
         content: matterResult.content,
-        ...(matterResult.data as { title: string; date: string; description: string }),
+        ...(matterResult.data as { title: string; date: string; description: string; lang?: string; tags?: string[] }),
     };
 }

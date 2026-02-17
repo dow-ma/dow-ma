@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.8.1",
+    "@iamtraction/google-translate": "^2.0.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.34.1",
     "gray-matter": "^4.0.3",
