@@ -1,0 +1,23 @@
+{
+    "profile": {
+        "title": "Dow Ma",
+        "role": "全栈开发者 | AI Maker",
+        "bio": "构建实用的 AI 应用。20 年代码经验，从全栈开发到量化交易。终身学习，持续交付。",
+        "badges": {
+            "vibeCoding": "Vibe Coding",
+            "agenticAi": "Agentic AI",
+            "digitalNomad": "OPC"
+        },
+        "opcManual": "OPC手册"
+    },
+    "projects": {
+        "title": "参与项目",
+        "list": []
+    },
+    "articles": {
+        "title": "最新文章",
+        "date": "{year}年{month}月{day}日",
+        "tag": "X / Twitter"
+    },
+    "footer": "© {year} Dow Ma. All rights reserved."
+}

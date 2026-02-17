@@ -1,0 +1,23 @@
+{
+    "profile": {
+        "title": "Dow Ma",
+        "role": "Full-stack | AI Maker",
+        "bio": "Building useful AI applications. Writing code for 20+ years, from full-stack to quantitative trading. Always learning, always shipping.",
+        "badges": {
+            "vibeCoding": "Vibe Coding",
+            "agenticAi": "Agentic AI",
+            "digitalNomad": "OPC"
+        },
+        "opcManual": "OPC MANUAL"
+    },
+    "projects": {
+        "title": "Participated Projects",
+        "list": []
+    },
+    "articles": {
+        "title": "Latest Articles",
+        "date": "{month} {day}, {year}",
+        "tag": "X / Twitter"
+    },
+    "footer": "© {year} Dow Ma. All rights reserved."
+}
