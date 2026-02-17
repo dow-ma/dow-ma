@@ -2,6 +2,7 @@ import { getPostData, getSortedPostsData } from "@/lib/posts";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import rehypePrettyCode from "rehype-pretty-code";
 
 export async function generateStaticParams() {
     const posts = getSortedPostsData();
@@ -38,7 +39,20 @@ export default async function Post({ params }: { params: Promise<{ slug: string;
                     </div>
 
                     <div className="mdx-content">
-                        <MDXRemote source={post.content || ''} />
+                        <MDXRemote
+                            source={post.content || ''}
+                            options={{
+                                parseFrontmatter: true,
+                                mdxOptions: {
+                                    rehypePlugins: [
+                                        [rehypePrettyCode, {
+                                            theme: 'catppuccin-macchiato',
+                                            keepBackground: true,
+                                        }]
+                                    ]
+                                }
+                            }}
+                        />
                     </div>
                 </article>
             </div>
