@@ -105,15 +105,55 @@ h4 {
 .prose {
   max-width: none;
   color: var(--foreground);
+  line-height: 1.75;
+  font-size: 15px;
 }
 
 .prose h1,
 .prose h2,
-.prose h3 {
+.prose h3,
+.prose h4,
+.prose h5 {
   color: var(--primary) !important;
+  font-weight: 800;
+  margin-top: 2.5em !important;
+  margin-bottom: 0.8em !important;
+  line-height: 1.2;
+}
+
+.prose h1 {
+  font-size: 2.2em;
   border-bottom: 2px solid var(--border);
-  padding-bottom: 4px;
-  margin-top: 2.5rem !important;
+  padding-bottom: 0.3em;
+}
+
+.prose h2 {
+  font-size: 1.8em;
+  border-bottom: 1.5px solid var(--border);
+  padding-bottom: 0.2em;
+}
+
+.prose h3 {
+  font-size: 1.5em;
+  padding-left: 12px;
+  border-left: 4px solid var(--border);
+}
+
+.prose h4 {
+  font-size: 1.2em;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.prose h5 {
+  font-size: 1em;
+  opacity: 0.8;
+  letter-spacing: 0.1em;
+}
+
+.prose p {
+  margin-bottom: 1.5em;
 }
 
 .prose pre {
@@ -122,6 +162,7 @@ h4 {
   background: var(--secondary) !important;
   padding: 1.5rem !important;
   box-shadow: 4px 4px 0px var(--border);
+  margin: 2em 0 !important;
 }
 
 .prose blockquote {
@@ -131,6 +172,7 @@ h4 {
   padding: 1.25rem;
   font-style: normal;
   border-radius: 0;
+  margin: 2em 0;
 }
 
 /* Custom Scrollbar */

@@ -85,7 +85,7 @@ export default async function Post({
                 const codeBlockRegex = /(```[\s\S]*?```)/g;
                 const parts = originalPostContent.split(codeBlockRegex);
 
-                const translatedParts = await Promise.all(parts.map(async (part) => {
+                const translatedParts = await Promise.all(parts.map(async (part: string) => {
                     if (part.trim().startsWith('```')) return part;
                     if (!part.trim()) return part;
                     try {
@@ -172,11 +172,11 @@ export default async function Post({
     const toggleUrl = isViewingOriginal ? `/${lang}/posts/${slug}` : `/${lang}/posts/${slug}?view=original`;
 
     return (
-        <main className="min-h-screen bg-background text-foreground p-6 md:p-12 lg:p-24 flex justify-center">
+        <main className="min-h-screen text-foreground p-6 md:p-10 lg:p-16 flex justify-center relative">
             <Background />
 
-            <div className="max-w-3xl w-full">
-                <div className="flex justify-between items-center mb-12">
+            <div className="max-w-3xl w-full relative">
+                <div className="flex justify-between items-center mb-8">
                     <Link
                         href={`/${lang}`}
                         className="wire-btn"
@@ -192,7 +192,7 @@ export default async function Post({
                             className="wire-btn"
                         >
                             <Languages size={14} />
-                            <span className="text-[11px] font-black uppercase">{lang === 'en' ? 'ZH' : 'EN'}</span>
+                            <span className="text-[11px] font-black uppercase text-foreground/80">{lang === 'en' ? 'ZH' : 'EN'}</span>
                         </Link>
                     </div>
                 </div>
@@ -209,16 +209,16 @@ export default async function Post({
                     />
                 )}
 
-                <article className="prose prose-lg max-w-none">
-                    <header className="wire-box mb-12 overflow-hidden">
+                <article className="prose max-w-none">
+                    <header className="wire-box mb-8 overflow-hidden">
                         <div className="wire-header">
                             <span>ARTICLE / CONTENT_VIEWER</span>
                         </div>
-                        <div className="p-8">
-                            <h1 className="text-4xl md:text-5xl font-black text-primary mb-6 leading-none tracking-tight">
+                        <div className="p-6 md:p-8">
+                            <h1 className="text-3xl md:text-5xl font-black text-primary mb-4 leading-none tracking-tight">
                                 {`> ${isViewingOriginal ? originalPostTitle : post.title}`}
                             </h1>
-                            <div className="flex items-center gap-6 font-black opacity-30 text-[10px] uppercase">
+                            <div className="flex items-center gap-6 font-black opacity-30 text-[9px] uppercase">
                                 <span>DATE: {post.date}</span>
                                 <span className="text-primary opacity-100">|</span>
                                 <span>STATUS: RENDERED</span>
