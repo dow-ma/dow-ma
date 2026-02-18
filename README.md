@@ -33,13 +33,11 @@
 
 ### 📊 GitHub Stats
 
-<p align="center">
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=dow-ma&theme=radical" alt="Streak Stats" />
-</p>
+[![GitHub Streak](https://github-readme-streak-stats.herokuapp.com?user=dow-ma&theme=transparent)](https://git.io/streak-stats)
 
-<p align="center">
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=dow-ma&theme=radical" alt="Summary Card" />
-</p>
+
+![](http://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=dow-ma&theme=holi)
+
 
 ---
 
