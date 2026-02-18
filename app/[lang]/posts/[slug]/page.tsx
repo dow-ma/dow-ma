@@ -172,11 +172,11 @@ export default async function Post({
     const toggleUrl = isViewingOriginal ? `/${lang}/posts/${slug}` : `/${lang}/posts/${slug}?view=original`;
 
     return (
-        <main className="min-h-screen text-foreground p-6 md:p-10 lg:p-16 flex justify-center relative">
+        <main className="min-h-screen text-foreground pt-4 pb-12 px-6 md:pt-8 md:px-10 flex justify-center relative">
             <Background />
 
             <div className="max-w-3xl w-full relative">
-                <div className="flex justify-between items-center mb-8">
+                <div className="flex justify-between items-center">
                     <Link
                         href={`/${lang}`}
                         className="wire-btn"
@@ -209,16 +209,16 @@ export default async function Post({
                     />
                 )}
 
-                <article className="prose max-w-none">
-                    <header className="wire-box mb-8 overflow-hidden">
+                <article className="max-w-none">
+                    <header className="wire-box mb-6 overflow-hidden">
                         <div className="wire-header">
                             <span>ARTICLE / CONTENT_VIEWER</span>
                         </div>
-                        <div className="p-6 md:p-8">
-                            <h1 className="text-3xl md:text-5xl font-black text-primary mb-4 leading-none tracking-tight">
+                        <div className="pt-0 pb-6 px-6 md:px-8">
+                            <h1 className="text-3xl md:text-5xl font-black text-primary !m-0 leading-tight tracking-tight">
                                 {`> ${isViewingOriginal ? originalPostTitle : post.title}`}
                             </h1>
-                            <div className="flex items-center gap-6 font-black opacity-30 text-[9px] uppercase">
+                            <div className="flex items-center gap-6 font-black opacity-30 text-[9px] uppercase mt-2">
                                 <span>DATE: {post.date}</span>
                                 <span className="text-primary opacity-100">|</span>
                                 <span>STATUS: RENDERED</span>
@@ -226,8 +226,10 @@ export default async function Post({
                         </div>
                     </header>
 
-                    <div className="mdx-content">
-                        {mdxContent}
+                    <div className="prose">
+                        <div className="mdx-content">
+                            {mdxContent}
+                        </div>
                     </div>
                 </article>
 
