@@ -66,6 +66,7 @@ export async function getPostData(slug: string) {
     return {
         slug,
         content: matterResult.content,
+        mtime: fs.statSync(fullPath).mtimeMs,
         ...(matterResult.data as { title: string; date: string; description: string; lang?: string; tags?: string[] }),
     };
 }

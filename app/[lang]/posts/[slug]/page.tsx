@@ -58,6 +58,12 @@ export default async function Post({
             try {
                 const cacheData = await fs.readFile(cacheFile, 'utf8');
                 const cached = JSON.parse(cacheData);
+
+                // If original file is newer than cache, re-translate
+                if (cached.mtime !== post.mtime) {
+                    throw new Error("Cache stale");
+                }
+
                 post.title = cached.title;
                 post.content = cached.content;
                 isTranslated = true;
@@ -123,7 +129,8 @@ export default async function Post({
                         await fs.mkdir(cacheDir, { recursive: true });
                         await fs.writeFile(cacheFile, JSON.stringify({
                             title: translatedTitle,
-                            content: translatedContent
+                            content: translatedContent,
+                            mtime: post.mtime
                         }));
                     } catch (fsWriteError) {
                         console.warn("Cache write failed:", fsWriteError);
