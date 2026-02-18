@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { TimeThemeManager } from "@/components/TimeThemeManager";
 
 const mono = JetBrains_Mono({
   subsets: ["latin"],
@@ -39,6 +40,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <TimeThemeManager />
           {children}
         </ThemeProvider>
       </body>
