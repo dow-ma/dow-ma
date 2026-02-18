@@ -162,7 +162,7 @@ function ProjectList({ dict, lang, onFlip }: { dict: Dictionary; lang: "en" | "z
             </div>
 
             <div className="flex-1 p-4 md:p-6 overflow-y-auto custom-scrollbar">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pb-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pb-2">
                     {validProjects.map((project, index) => {
                         const isGithub = project.url.includes("github.com");
                         const Icon = isGithub ? Github : LinkIcon;
@@ -174,12 +174,9 @@ function ProjectList({ dict, lang, onFlip }: { dict: Dictionary; lang: "en" | "z
                                 rel="noopener noreferrer"
                                 className="group flex flex-col border border-border/10 hover:border-primary transition-all bg-background shadow-[2px_2px_0px_transparent] hover:shadow-[3px_3px_0px_var(--primary)]"
                             >
-                                <div className="p-2 border-b border-border/10 bg-secondary/30 flex justify-between items-center group-hover:bg-primary/5 transition-colors">
-                                    <span className="text-[10px] font-black truncate pr-4">{project.name}</span>
-                                    <Icon size={12} className="opacity-30 group-hover:opacity-100" />
-                                </div>
-                                <div className="p-3 text-[10px] font-medium opacity-60 line-clamp-2 h-12 overflow-hidden leading-tight">
-                                    {project.description ? project.description[lang] : "..."}
+                                <div className="p-3 flex justify-between items-start gap-2 group-hover:bg-primary/5 transition-colors h-full min-h-[60px]">
+                                    <span className="text-[10px] font-black leading-tight break-words">{project.name}</span>
+                                    <Icon size={12} className="opacity-30 group-hover:opacity-100 shrink-0 mt-0.5" />
                                 </div>
                             </a>
                         );
