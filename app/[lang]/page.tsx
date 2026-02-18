@@ -5,17 +5,16 @@ import { ArticleList } from "@/components/ArticleList";
 import { Background } from "@/components/Background";
 import { getSortedPostsData } from "@/lib/posts";
 import { getDictionary } from "@/lib/get-dictionary";
+import Link from "next/link";
 
-export const revalidate = 3600; // Revalidate every hour
+export const revalidate = 3600;
 
 export default async function Home({ params }: { params: Promise<{ lang: "en" | "zh" }> }) {
   const { lang } = await params;
   let posts = getSortedPostsData();
   const dict = await getDictionary(lang);
 
-  // Auto-translate post metadata for the list
   const translatedPosts = await Promise.all(posts.map(async (post) => {
-    // Clone post to avoid mutation
     const newPost = { ...post };
     if (newPost.lang && newPost.lang !== lang) {
       try {
@@ -34,13 +33,18 @@ export default async function Home({ params }: { params: Promise<{ lang: "en" | 
   }));
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 lg:p-24 gap-12 relative">
+    <main className="min-h-screen flex flex-col items-center p-0 sm:p-6 md:p-12 lg:p-20 relative">
       <Background />
-      <ProfileCard dict={dict} lang={lang} />
-      <ArticleList posts={translatedPosts} dict={dict} lang={lang} />
 
-      <footer className="w-full max-w-2xl text-center text-white/30 text-sm pb-8">
-        {dict.footer.replace("{year}", new Date().getFullYear().toString())}
+      <div className="w-full flex flex-col items-center gap-12 mt-4 sm:mt-10 px-4 sm:px-0">
+        <ProfileCard dict={dict} lang={lang} />
+        <ArticleList posts={translatedPosts} dict={dict} lang={lang} />
+      </div>
+
+      <footer className="w-full max-w-2xl text-center border-t border-border pt-8 pb-16 mt-16 opacity-30">
+        <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+          {`>> EOF / SYSTEM_TERMINATED / ${dict.footer.replace("{year}", new Date().getFullYear().toString())} <<`}
+        </span>
       </footer>
     </main>
   );

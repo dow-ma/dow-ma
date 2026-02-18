@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight, Hash, Terminal, Calendar, Tag } from "lucide-react";
 import Link from "next/link";
 import { Post } from "@/lib/posts";
 import { Dictionary } from "@/lib/types";
@@ -15,15 +15,6 @@ interface ArticleListProps {
 
 const ITEMS_PER_PAGE = 10;
 
-/**
- * ArticleList Component
- * 
- * Displays a list of recent blog posts with pagination.
- * 
- * @param posts - Array of Post objects.
- * @param dict - Localized dictionary data.
- * @param lang - Current language.
- */
 export function ArticleList({ posts, dict, lang }: ArticleListProps) {
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -33,7 +24,6 @@ export function ArticleList({ posts, dict, lang }: ArticleListProps) {
 
     const handlePageChange = (newPage: number) => {
         setCurrentPage(newPage);
-        // Optional: Scroll to top of list
         const listElement = document.getElementById('article-list-top');
         if (listElement) {
             listElement.scrollIntoView({ behavior: 'smooth' });
@@ -41,20 +31,21 @@ export function ArticleList({ posts, dict, lang }: ArticleListProps) {
     };
 
     return (
-        <div className="w-full max-w-2xl space-y-4" id="article-list-top">
-            <motion.h2
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="text-2xl font-bold text-white mb-6 px-2 flex justify-between items-end"
-            >
-                <span>{dict.articles.title}</span>
-                {totalPages > 1 && (
-                    <span className="text-sm font-normal text-white/40">
-                        Page {currentPage} of {totalPages}
+        <div className="w-full max-w-2xl space-y-6" id="article-list-top">
+            <header className="wire-box overflow-hidden">
+                <div className="wire-header">
+                    <Terminal size={12} />
+                    <span>Archive_System / Index</span>
+                </div>
+                <div className="p-4 flex justify-between items-center bg-background">
+                    <h2 className="text-xl font-black uppercase tracking-tight">
+                        {`# ${dict.articles.title}`}
+                    </h2>
+                    <span className="text-[10px] font-bold opacity-30">
+                        {`COUNT: ${posts.length} / PAGE: ${currentPage}_${totalPages}`}
                     </span>
-                )}
-            </motion.h2>
+                </div>
+            </header>
 
             <div className="grid gap-4">
                 {currentPosts.map((post, index) => (
@@ -63,22 +54,23 @@ export function ArticleList({ posts, dict, lang }: ArticleListProps) {
             </div>
 
             {totalPages > 1 && (
-                <div className="flex justify-center gap-4 mt-8 pt-4">
+                <div className="wire-box p-4 flex justify-center gap-6 bg-foreground/[0.02]">
                     <button
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                        className="wire-btn"
                     >
-                        <ChevronLeft className="w-4 h-4" />
-                        Prev
+                        {`<<_PREV`}
                     </button>
+                    <div className="flex items-center text-[10px] font-bold italic opacity-30">
+                        {`PAGE_NAV_CTRL`}
+                    </div>
                     <button
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                        className="wire-btn"
                     >
-                        Next
-                        <ChevronRight className="w-4 h-4" />
+                        {`NEXT_>>`}
                     </button>
                 </div>
             )}
@@ -86,50 +78,53 @@ export function ArticleList({ posts, dict, lang }: ArticleListProps) {
     );
 }
 
-/**
- * ArticleCard Component
- * 
- * Renders a single blog post card with glassmorphism style.
- */
 function ArticleCard({ post, index, dict, lang }: { post: Post; index: number; dict: Dictionary; lang: "en" | "zh" }) {
     const formattedDate = new Date(post.date).toLocaleDateString(dict.articles.date.includes('年') ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 + index * 0.1 }}
+            transition={{ delay: 0.1 + index * 0.05 }}
         >
-            <Link href={`/${lang}/posts/${post.slug}`} className="block">
-                <div className="glass-hover glass rounded-2xl p-6 relative group cursor-pointer border border-white/5 hover:border-white/20">
-                    <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform group-hover:translate-x-1 group-hover:-translate-y-1">
-                        <ArrowUpRight className="w-5 h-5 text-white" />
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                        <div className="flex items-center gap-3 text-xs text-white/40 mb-1">
-                            <span>{formattedDate}</span>
+            <Link href={`/${lang}/posts/${post.slug}`} className="block group">
+                <div className="wire-box hover:border-primary transition-colors">
+                    <div className="wire-header justify-between py-1 px-4 bg-foreground/[0.03]">
+                        <div className="flex items-center gap-3">
+                            <span className="flex items-center gap-1 opacity-50">
+                                <Calendar size={10} />
+                                {formattedDate}
+                            </span>
                             {post.tags && post.tags.length > 0 && (
-                                <>
-                                    <span>•</span>
-                                    <div className="flex gap-2">
-                                        {post.tags.map((tag) => (
-                                            <span key={tag} className="bg-white/5 px-2 py-0.5 rounded text-white/50">
-                                                {tag}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </>
+                                <div className="flex gap-2">
+                                    {post.tags.slice(0, 2).map((tag) => (
+                                        <span key={tag} className="flex items-center gap-1 text-primary lowercase">
+                                            <Tag size={10} />
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
                             )}
                         </div>
-
-                        <h3 className="text-xl font-semibold text-white/90 group-hover:text-indigo-300 transition-colors mb-1">
-                            {post.title}
-                        </h3>
-                        <p className="text-sm text-white/60 line-clamp-2 leading-relaxed">
-                            {post.description}
-                        </p>
+                        <span className="text-[9px] opacity-20 font-bold group-hover:opacity-100 group-hover:text-primary">00{index + 1}_REF</span>
                     </div>
+
+                    <div className="p-6 bg-background group-hover:bg-primary/[0.02] transition-colors">
+                        <div className="flex justify-between items-start gap-4">
+                            <div className="space-y-2">
+                                <h3 className="text-xl font-bold tracking-tight group-hover:text-primary transition-colors">
+                                    {post.title}
+                                </h3>
+                                <p className="text-sm font-bold opacity-50 line-clamp-2 leading-relaxed">
+                                    {post.description}
+                                </p>
+                            </div>
+                            <ArrowUpRight size={16} className="text-foreground/20 group-hover:text-primary transition-all shrink-0 mt-1" />
+                        </div>
+                    </div>
+
+                    {/* Visual Bottom Bar */}
+                    <div className="h-[2px] w-0 bg-primary group-hover:w-full transition-all duration-300" />
                 </div>
             </Link>
         </motion.div>

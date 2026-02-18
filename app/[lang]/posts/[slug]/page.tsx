@@ -10,21 +10,19 @@ import { TranslationBanner } from "@/components/TranslationBanner";
 import fs from "fs/promises";
 import path from "path";
 import { getDictionary } from "@/lib/get-dictionary";
+import { Background } from "@/components/Background";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { Languages } from "lucide-react";
 
-// Simple Markdown Fixer to repair common translation artifacts
 function repairMarkdown(text: string): string {
     return text
-        // Fix headers: "#Title" -> "# Title"
         .replace(/^(#+)([^#\s])/gm, '$1 $2')
-        // Fix lists: "-Item" -> "- Item"
         .replace(/^(\s*[-*])([^\s])/gm, '$1 $2')
-        // Fix blockquotes: ">Text" -> "> Text"
         .replace(/^(\s*>)([^\s])/gm, '$1 $2');
 }
 
 export async function generateStaticParams() {
     const posts = getSortedPostsData();
-    // Generate params for both languages
     const params = [];
     for (const post of posts) {
         params.push({ lang: 'en', slug: post.slug });
@@ -45,7 +43,6 @@ export default async function Post({
     const dict = await getDictionary(lang);
     let post = await getPostData(slug);
 
-    // Original content reference for fallback or toggle
     const originalPostTitle = post.title;
     const originalPostContent = post.content || '';
 
@@ -53,13 +50,11 @@ export default async function Post({
     let mdxContent;
     const isViewingOriginal = view === 'original';
 
-    // Auto-translation logic
     if (post.lang && post.lang !== lang && !isViewingOriginal) {
         const cacheDir = path.join(process.cwd(), 'posts', 'cache');
         const cacheFile = path.join(cacheDir, `${slug}-${lang}.json`);
 
         try {
-            // Check cache first
             try {
                 const cacheData = await fs.readFile(cacheFile, 'utf8');
                 const cached = JSON.parse(cacheData);
@@ -67,7 +62,6 @@ export default async function Post({
                 post.content = cached.content;
                 isTranslated = true;
 
-                // Compile cached content
                 const { content: compiledContent } = await compileMDX({
                     source: cached.content,
                     options: {
@@ -75,7 +69,7 @@ export default async function Post({
                         mdxOptions: {
                             rehypePlugins: [
                                 [rehypePrettyCode, {
-                                    theme: 'catppuccin-macchiato',
+                                    theme: 'solarized-dark',
                                     keepBackground: true,
                                 }]
                             ]
@@ -84,23 +78,16 @@ export default async function Post({
                 });
                 mdxContent = compiledContent;
             } catch (cacheError) {
-                // Cache miss or invalid, proceed to translate
                 const targetLang = lang === 'zh' ? 'zh-CN' : lang;
-
-                // Translate title
                 const titleRes = await translate(post.title, { to: targetLang });
                 const translatedTitle = titleRes.text;
 
-                // Translate content excluding code blocks
                 const codeBlockRegex = /(```[\s\S]*?```)/g;
                 const parts = originalPostContent.split(codeBlockRegex);
 
                 const translatedParts = await Promise.all(parts.map(async (part) => {
-                    if (part.trim().startsWith('```')) {
-                        return part;
-                    }
+                    if (part.trim().startsWith('```')) return part;
                     if (!part.trim()) return part;
-
                     try {
                         const res = await translate(part, { to: targetLang });
                         return repairMarkdown(res.text);
@@ -109,7 +96,6 @@ export default async function Post({
                     }
                 }));
 
-                // Join with double newlines
                 const translatedContent = translatedParts.join('\n\n');
 
                 try {
@@ -120,7 +106,7 @@ export default async function Post({
                             mdxOptions: {
                                 rehypePlugins: [
                                     [rehypePrettyCode, {
-                                        theme: 'catppuccin-macchiato',
+                                        theme: 'solarized-dark',
                                         keepBackground: true,
                                     }]
                                 ]
@@ -133,7 +119,6 @@ export default async function Post({
                     mdxContent = compiledContent;
                     isTranslated = true;
 
-                    // WRAP CACHE WRITE IN TRY-CATCH to prevent failure on read-only environments
                     try {
                         await fs.mkdir(cacheDir, { recursive: true });
                         await fs.writeFile(cacheFile, JSON.stringify({
@@ -141,17 +126,13 @@ export default async function Post({
                             content: translatedContent
                         }));
                     } catch (fsWriteError) {
-                        console.warn("Could not write translation cache (likely a read-only production environment):", fsWriteError);
+                        console.warn("Cache write failed:", fsWriteError);
                     }
-
                 } catch (compileError) {
-                    console.error("Translated MDX compilation failed, falling back to original:", compileError);
                     throw compileError;
                 }
             }
-
         } catch (e) {
-            console.error("Translation logic/compilation failed:", e);
             const { content: originalCompiled } = await compileMDX({
                 source: originalPostContent,
                 options: {
@@ -159,7 +140,7 @@ export default async function Post({
                     mdxOptions: {
                         rehypePlugins: [
                             [rehypePrettyCode, {
-                                theme: 'catppuccin-macchiato',
+                                theme: 'solarized-dark',
                                 keepBackground: true,
                             }]
                         ]
@@ -170,7 +151,6 @@ export default async function Post({
             isTranslated = false;
         }
     } else {
-        // No translation needed or explicit original view
         const { content: originalCompiled } = await compileMDX({
             source: originalPostContent,
             options: {
@@ -178,7 +158,7 @@ export default async function Post({
                 mdxOptions: {
                     rehypePlugins: [
                         [rehypePrettyCode, {
-                            theme: 'catppuccin-macchiato',
+                            theme: 'solarized-dark',
                             keepBackground: true,
                         }]
                     ]
@@ -186,25 +166,36 @@ export default async function Post({
             }
         });
         mdxContent = originalCompiled;
-
-        // Even in original view, we show the banner if translation is available/possible
-        if (post.lang && post.lang !== lang) {
-            isTranslated = true;
-        }
+        if (post.lang && post.lang !== lang) isTranslated = true;
     }
 
     const toggleUrl = isViewingOriginal ? `/${lang}/posts/${slug}` : `/${lang}/posts/${slug}?view=original`;
 
     return (
-        <main className="min-h-screen bg-[#0a0a0a] text-white p-4 md:p-8 lg:p-24 flex justify-center">
+        <main className="min-h-screen bg-background text-foreground p-6 md:p-12 lg:p-24 flex justify-center">
+            <Background />
+
             <div className="max-w-3xl w-full">
-                <Link
-                    href={`/${lang}`}
-                    className="inline-flex items-center gap-2 text-white/50 hover:text-white mb-4 transition-colors"
-                >
-                    <ArrowLeft className="w-4 h-4" />
-                    {lang === 'zh' ? '返回首页' : 'Back to Home'}
-                </Link>
+                <div className="flex justify-between items-center mb-12">
+                    <Link
+                        href={`/${lang}`}
+                        className="wire-btn"
+                    >
+                        <ArrowLeft size={16} />
+                        <span className="text-[11px] font-black uppercase">{lang === 'zh' ? 'Return_Home' : 'Return_Home'}</span>
+                    </Link>
+
+                    <div className="flex gap-2">
+                        <ThemeToggle variant="button" />
+                        <Link
+                            href={lang === 'en' ? `/zh/posts/${slug}` : `/en/posts/${slug}`}
+                            className="wire-btn"
+                        >
+                            <Languages size={14} />
+                            <span className="text-[11px] font-black uppercase">{lang === 'en' ? 'ZH' : 'EN'}</span>
+                        </Link>
+                    </div>
+                </div>
 
                 {isTranslated && (
                     <TranslationBanner
@@ -218,18 +209,33 @@ export default async function Post({
                     />
                 )}
 
-                <article className="prose prose-invert prose-lg max-w-none">
-                    <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 mb-6 !leading-tight" style={{ WebkitTextFillColor: 'transparent' }}>
-                        {isViewingOriginal ? originalPostTitle : post.title}
-                    </h1>
-                    <div className="flex items-center gap-4 text-sm text-white/40 mb-12">
-                        <time>{post.date}</time>
-                    </div>
+                <article className="prose prose-lg max-w-none">
+                    <header className="wire-box mb-12 overflow-hidden">
+                        <div className="wire-header">
+                            <span>ARTICLE / CONTENT_VIEWER</span>
+                        </div>
+                        <div className="p-8">
+                            <h1 className="text-4xl md:text-5xl font-black text-primary mb-6 leading-none tracking-tight">
+                                {`> ${isViewingOriginal ? originalPostTitle : post.title}`}
+                            </h1>
+                            <div className="flex items-center gap-6 font-black opacity-30 text-[10px] uppercase">
+                                <span>DATE: {post.date}</span>
+                                <span className="text-primary opacity-100">|</span>
+                                <span>STATUS: RENDERED</span>
+                            </div>
+                        </div>
+                    </header>
 
                     <div className="mdx-content">
                         {mdxContent}
                     </div>
                 </article>
+
+                <footer className="mt-20 py-12 border-t border-border/20 text-center opacity-30">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+                        {`>> EOF / END_OF_FILE <<`}
+                    </span>
+                </footer>
             </div>
         </main>
     );

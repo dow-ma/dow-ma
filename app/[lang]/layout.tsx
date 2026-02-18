@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const mono = JetBrains_Mono({
   subsets: ["latin"],
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -32,7 +32,7 @@ export default async function RootLayout({
 
   return (
     <html lang={lang} suppressHydrationWarning>
-      <body className={`${outfit.variable} antialiased`}>
+      <body className={`${mono.variable} font-mono antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -45,4 +45,3 @@ export default async function RootLayout({
     </html>
   );
 }
-

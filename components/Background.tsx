@@ -3,11 +3,20 @@
 export function Background() {
     return (
         <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-600/20 rounded-full blur-[120px] animate-pulse" />
-            <div
-                className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/20 rounded-full blur-[120px] animate-pulse"
-                style={{ animationDelay: "2s" }}
+            {/* Scanline Effect */}
+            <div className="scanline" />
+
+            {/* Grit/Grid Effect */}
+            <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
+                style={{
+                    backgroundImage: `radial-gradient(var(--foreground) 1px, transparent 0)`,
+                    backgroundSize: '24px 24px'
+                }}
             />
+
+            {/* Subtle glow in corners (simplified) */}
+            <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-primary/5 blur-[100px]" />
+            <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-primary/5 blur-[100px]" />
         </div>
     );
 }
