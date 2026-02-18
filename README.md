@@ -33,8 +33,7 @@
 
 ### 📊 GitHub Stats
 
-[![GitHub Streak](https://github-readme-streak-stats.herokuapp.com?user=dow-ma&theme=transparent)](https://git.io/streak-stats)
-
+[![GitHub Streak](https://github-readme-streak-stats.herokuapp.com?user=dow-ma&theme=transparent&card_width=700&card_height=200)](https://git.io/streak-stats)
 
 ![](http://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=dow-ma&theme=holi)
 
