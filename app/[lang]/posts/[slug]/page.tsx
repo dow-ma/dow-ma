@@ -228,7 +228,7 @@ export default async function Post({
                             <div className="flex items-center gap-6 font-black opacity-30 text-[9px] uppercase mt-4">
                                 <span>DATE: {post.date}</span>
                                 <span className="text-primary opacity-100">|</span>
-                                <span>STATUS: RENDERED</span>
+                                <span>STATUS: PUBLISHED</span>
                             </div>
                         </div>
                     </header>
