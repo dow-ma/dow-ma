@@ -62,9 +62,10 @@ function CardContent({ dict, onFlip, hasProjects, lang }: { dict: Dictionary; on
                     {hasProjects && (
                         <button
                             onClick={onFlip}
-                            className="text-[9px] font-black border-l border-border/50 px-4 hover:bg-primary hover:text-white transition-all h-full uppercase tracking-widest"
+                            className="flex items-center gap-1.5 hover:text-primary hover:bg-primary/5 transition-all px-3 h-full uppercase text-[9px] font-black tracking-tighter"
                         >
-                            [ DATA ]
+                            <Layers size={12} />
+                            <span>PROJECTS</span>
                         </button>
                     )}
                 </div>

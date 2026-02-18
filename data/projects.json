@@ -1,1 +1,7 @@
-[]
+[
+    {
+        "name": "Hello World",
+        "url": "https://dow.ma/posts/hello-world",
+        "description": "Hello World File"
+    }
+]
