@@ -53,7 +53,7 @@ function CardContent({ dict, onFlip, hasProjects, lang }: { dict: Dictionary; on
                     <ThemeToggle />
                     <Link
                         href={lang === 'en' ? '/zh' : '/en'}
-                        className="flex items-center gap-1.5 hover:text-primary transition-colors px-3 border-l border-border/20 h-full uppercase text-[9px] font-black tracking-tighter"
+                        className="flex items-center gap-1.5 hover:text-primary hover:bg-primary/5 transition-all px-3 h-full uppercase text-[9px] font-black tracking-tighter"
                     >
                         <Languages size={12} />
                         <span>{lang === 'en' ? '简体中文' : 'ENGLISH'}</span>

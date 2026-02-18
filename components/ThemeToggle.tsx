@@ -33,7 +33,7 @@ export function ThemeToggle({ variant = "header" }: ThemeToggleProps) {
     return (
         <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="flex items-center gap-1.5 hover:text-primary transition-colors group px-2 border-l border-border/20 h-full"
+            className="flex items-center gap-1.5 hover:text-primary hover:bg-primary/5 transition-all group px-3 h-full"
             title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
         >
             {theme === "dark" ? <Sun size={12} className="group-hover:rotate-45 transition-transform" /> : <Moon size={12} />}
