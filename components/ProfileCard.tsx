@@ -113,9 +113,9 @@ function CardContent({ dict, onFlip, hasProjects, lang }: { dict: Dictionary; on
 
                     <div className="pt-2 flex flex-wrap gap-2 justify-center md:justify-start items-center">
                         <SocialButton href="https://opc.land?ref=dow.ma" label={dict.profile.opcManual} icon={ArrowUpRight} />
-                        <SocialButton href="https://x.com/VoiceOfDow" label="X" icon={XIcon} />
-                        <SocialButton href="https://github.com/dow-ma" label="Github" icon={Github} />
-                        <SocialButton href="mailto:echo@dow.ma" label="Email" icon={Mail} />
+                        <SocialButton href="https://x.com/VoiceOfDow" label="@VOICEOFDOW" icon={XIcon} />
+                        <SocialButton href="https://github.com/dow-ma" label="DOW-MA" icon={Github} />
+                        <SocialButton href="mailto:echo@dow.ma" label="ECHO@DOW.MA" icon={Mail} />
                     </div>
                 </div>
             </div>
@@ -138,8 +138,8 @@ function SocialButton({ href, label, icon: Icon }: { href: string; label: string
             rel="noopener noreferrer"
             className="wire-btn py-1 px-3"
         >
-            <span className="font-black text-[10px] uppercase">{label}</span>
             <Icon size={12} className="shrink-0" />
+            <span className="font-black text-[10px] uppercase">{label}</span>
         </a>
     );
 }
