@@ -19,7 +19,10 @@ export function ThemeToggle({ variant = "header" }: ThemeToggleProps) {
     if (variant === "button") {
         return (
             <button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                onClick={() => {
+                    localStorage.setItem("manual-theme-override", "true");
+                    setTheme(theme === "dark" ? "light" : "dark");
+                }}
                 className="wire-btn"
             >
                 {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
@@ -32,7 +35,10 @@ export function ThemeToggle({ variant = "header" }: ThemeToggleProps) {
 
     return (
         <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            onClick={() => {
+                localStorage.setItem("manual-theme-override", "true");
+                setTheme(theme === "dark" ? "light" : "dark");
+            }}
             className="flex items-center gap-1.5 hover:text-primary hover:bg-primary/5 transition-all group px-3 h-full"
             title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
         >

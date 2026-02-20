@@ -8,20 +8,23 @@ export function TimeThemeManager() {
 
     useEffect(() => {
         const checkTime = () => {
-            // Only auto-switch if no manual theme is stored in localStorage 
-            // OR if the user explicitly wants time-based switching to be active.
-            // Usually, if a user hasn't interacted with the toggle, we follow the clock.
+            const hour = new Date().getHours();
+            const isNight = hour >= 18 || hour < 6;
+            const targetTheme = isNight ? "dark" : "light";
 
-            const hasManualTheme = localStorage.getItem("theme") && localStorage.getItem("theme") !== "system";
+            const isManualOverride = localStorage.getItem("manual-theme-override") === "true";
 
-            if (!hasManualTheme) {
-                const hour = new Date().getHours();
-                const isNight = hour >= 18 || hour < 6;
-                const targetTheme = isNight ? "dark" : "light";
-
-                if (theme !== targetTheme) {
-                    setTheme(targetTheme);
+            if (isManualOverride) {
+                // If user's manual choice matches the current natural time-based theme,
+                // we clear the override and resume auto-tracking.
+                if (theme === targetTheme) {
+                    localStorage.removeItem("manual-theme-override");
                 }
+                return;
+            }
+
+            if (theme !== targetTheme) {
+                setTheme(targetTheme);
             }
         };
 
